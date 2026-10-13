@@ -13,14 +13,24 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.contrib.auth import logout
 
-from .models import Income, Expense, Loan
+from .models import Income, Expense, Loan, PredictionHistory
 from .forms import IncomeForm, ExpenseForm, LoanForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models.functions import TruncMonth
 
 
+from .models import (
+    Income,
+    Expense,
+    Loan,
+    PredictionHistory
+)
 
-
+from .forms import (
+    IncomeForm,
+    ExpenseForm,
+    LoanForm
+)
 BEST_MODEL_PATH = (
     settings.BASE_DIR
     / "models"
@@ -465,8 +475,6 @@ def income_tracker(request):
             "incomes": incomes
         }
     )
-
-
 def financial_analysis(request):
 
     # ========================================================
@@ -474,7 +482,10 @@ def financial_analysis(request):
     # ========================================================
 
     if not request.user.is_authenticated:
-        return redirect("login")
+
+        return redirect(
+            "login"
+        )
 
 
     # ========================================================
@@ -488,7 +499,7 @@ def financial_analysis(request):
             "financial_analysis.html",
             {
                 "error":
-                    "Logistic Regression model could not be loaded."
+                    "Extra Trees model could not be loaded."
             }
         )
 
@@ -516,11 +527,15 @@ def financial_analysis(request):
 
         selected_year = selected_date.year
 
-        selected_month_number = selected_date.month
+        selected_month_number = (
+            selected_date.month
+        )
 
     except ValueError:
 
-        selected_month = datetime.now().strftime("%Y-%m")
+        selected_month = datetime.now().strftime(
+            "%Y-%m"
+        )
 
         selected_date = datetime.strptime(
             selected_month,
@@ -529,7 +544,9 @@ def financial_analysis(request):
 
         selected_year = selected_date.year
 
-        selected_month_number = selected_date.month
+        selected_month_number = (
+            selected_date.month
+        )
 
 
     # ========================================================
@@ -625,13 +642,21 @@ def financial_analysis(request):
     # CONVERT TO FLOAT
     # ========================================================
 
-    total_income = float(total_income)
+    total_income = float(
+        total_income
+    )
 
-    total_expenses = float(total_expenses)
+    total_expenses = float(
+        total_expenses
+    )
 
-    total_loan = float(total_loan)
+    total_loan = float(
+        total_loan
+    )
 
-    total_emi = float(total_emi)
+    total_emi = float(
+        total_emi
+    )
 
 
     # ========================================================
@@ -646,7 +671,7 @@ def financial_analysis(request):
 
 
     # ========================================================
-    # ML RATIOS
+    # RATIOS
     # ========================================================
 
     if total_income > 0:
@@ -788,23 +813,35 @@ def financial_analysis(request):
 
 
     # ========================================================
-    # CREATE 13 FEATURES
+    # 13 FEATURES
     # ========================================================
 
     feature_names = [
 
         "age",
+
         "gender",
+
         "education_level",
+
         "employment_status",
+
         "monthly_income_inr",
+
         "monthly_expenses_inr",
+
         "savings_inr",
+
         "has_loan",
+
         "loan_amount_inr",
+
         "monthly_emi_inr",
+
         "debt_to_income_ratio",
+
         "savings_to_income_ratio",
+
         "expense_ratio"
 
     ]
@@ -852,40 +889,7 @@ def financial_analysis(request):
 
 
     # ========================================================
-    # DEBUG INPUT
-    # ========================================================
-
-    print("\n")
-
-    print("=" * 70)
-
-    print(
-        "FINANCIAL ANALYSIS - LOGISTIC REGRESSION MODEL INPUT"
-    )
-
-    print("=" * 70)
-
-    print(
-        features.to_string(
-            index=False
-        )
-    )
-
-    print(
-        "Number of features:",
-        len(features.columns)
-    )
-
-    print(
-        "Feature names:",
-        list(features.columns)
-    )
-
-    print("=" * 70)
-
-
-    # ========================================================
-    # LOGISTIC REGRESSION PREDICTION
+    # MODEL PREDICTION
     # ========================================================
 
     try:
@@ -896,12 +900,14 @@ def financial_analysis(request):
 
         financial_status = str(
             prediction[0]
-        )
+        ).strip()
+
 
         print(
-            "Logistic Regression Prediction:",
+            "Extra Trees Prediction:",
             financial_status
         )
+
 
     except Exception as e:
 
@@ -926,10 +932,10 @@ def financial_analysis(request):
 
         recommendation = (
             "Your financial status is predicted as Good. "
-            "Your income, expenses, savings, and financial ratios "
-            "show a healthy financial condition. Continue saving "
-            "regularly, control unnecessary expenses, and maintain "
-            "your current financial habits."
+            "Your income, expenses, savings, and financial "
+            "ratios show a healthy financial condition. "
+            "Continue saving regularly, control unnecessary "
+            "expenses, and maintain your current financial habits."
         )
 
 
@@ -946,10 +952,11 @@ def financial_analysis(request):
 
         recommendation = (
             "Your financial status is predicted as Poor. "
-            "Your income, expenses, savings, and financial ratios "
-            "indicate that your financial condition needs attention. "
-            "Try to reduce unnecessary expenses, increase your savings, "
-            "and improve your overall financial management."
+            "Your income, expenses, savings, and financial "
+            "ratios indicate that your financial condition "
+            "needs attention. Try to reduce unnecessary "
+            "expenses, increase your savings, and improve "
+            "your overall financial management."
         )
 
 
@@ -957,7 +964,7 @@ def financial_analysis(request):
 
         recommendation = (
             "Financial prediction was generated "
-            "by the trained Logistic Regression model."
+            "by the trained Extra Trees model."
         )
 
 
@@ -1027,6 +1034,25 @@ def financial_analysis(request):
             "Review loan commitments regularly"
 
         ]
+
+
+    # ========================================================
+    # SAVE PREDICTION HISTORY
+    # ========================================================
+
+    PredictionHistory.objects.create(
+
+        user=request.user,
+
+        predicted_status=financial_status,
+
+        recommendation=recommendation,
+
+        risk_management="\n".join(
+            risk_management
+        )
+
+    )
 
 
     # ========================================================
@@ -1114,71 +1140,6 @@ def financial_analysis(request):
             None
 
     }
-
-
-    # ========================================================
-    # DEBUG RESULT
-    # ========================================================
-
-    print("\n")
-
-    print("=" * 70)
-
-    print(
-        "FINAL FINANCIAL ANALYSIS"
-    )
-
-    print("=" * 70)
-
-    print(
-        "Financial Status:",
-        financial_status
-    )
-
-    print(
-        "Income:",
-        total_income
-    )
-
-    print(
-        "Expenses:",
-        total_expenses
-    )
-
-    print(
-        "Loan:",
-        total_loan
-    )
-
-    print(
-        "EMI:",
-        total_emi
-    )
-
-    print(
-        "Savings:",
-        savings
-    )
-
-    print(
-        "Expense Ratio:",
-        expense_ratio,
-        "%"
-    )
-
-    print(
-        "Savings Ratio:",
-        savings_ratio,
-        "%"
-    )
-
-    print(
-        "Debt Ratio:",
-        debt_to_income_ratio,
-        "%"
-    )
-
-    print("=" * 70)
 
 
     # ========================================================
@@ -1715,4 +1676,17 @@ def dashboard(request):
         request,
         "dashboard.html",
         context
+    )
+
+def prediction_history(request):
+    history = PredictionHistory.objects.filter(
+        user=request.user
+    ).order_by('-prediction_date')
+
+    return render(
+        request,
+        'prediction_history.html',
+        {
+            'history': history
+        }
     )

@@ -95,7 +95,23 @@
             color: #38bdf8;
         }
 
+        .header-nav {
+             display: flex;
+            align-items: center;
+            gap: 28px;
+        }
 
+        .header-nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.25s ease;
+        }
+
+        .header-nav a:hover {
+             color: #38bdf8;
+        }
         .header-status {
 
             display: flex;
@@ -1067,18 +1083,29 @@
             Fin<span>Wise</span>
 
         </div>
+         <nav class="header-nav">
 
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
 
-        <div class="header-status">
+        <a href="{% url 'financial_details' %}">
+            Financial Details
+        </a>
 
-            <span class="status-dot"></span>
+        <a href="{% url 'prediction_history' %}">
+            Prediction History
+        </a>
+        <a href="{% url 'registration' %}" class="register-btn">
+            Register
+        </a>
 
-            Financial Analysis
-
-        </div>
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
+     </nav>    
 
     </header>
-
 
 
     <!-- =========================
@@ -1528,38 +1555,7 @@
             </div>
 
 
-
-            <!-- =========================
-                 ACTION BUTTONS
-            ========================= -->
-
-            <div class="actions">
-
-                <!-- Dashboard -->
-                 <a 
-                     href="{% url 'dashboard' %}" 
-                    class="button"
-                >
-                     Dashboard
-                 </a>
-
-                 <!-- Financial Details -->
-                 <a
-                    href="{% url 'financial_details' %}"
-                    class="button"
-                 >
-                    Financial Details
-                </a>
-                <a
-                    href="{% url 'home' %}"
-                    class="button home-button"
-                >
-
-                    Back to Home
-
-                </a>
-
-            </div>
+    
 
             </div>
 

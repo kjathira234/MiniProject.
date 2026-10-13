@@ -77,5 +77,11 @@ path(
     name="dashboard"
 ),
 path("logout/", views.logout_view, name="logout"),
+
+path(
+    'prediction-history/',
+    views.prediction_history,
+    name='prediction_history'
+),
 ]
 

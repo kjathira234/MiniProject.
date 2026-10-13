@@ -28,69 +28,87 @@
 
         /* ================= HEADER ================= */
 
-        header {
-            background: #ffffff;
-            padding: 16px 7%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+       /* ================= FINWISE COMMON HEADER ================= */
 
-        .logo {
-            font-size: 27px;
-            font-weight: 800;
-            color: #2563eb;
-        }
+header {
+    width: 100%;
+    height: 85px;
+    background: #141b2f;
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
 
-        .logo span {
-            color: #0f172a;
-        }
+/* FinWise Logo */
 
-        .logo-subtitle {
-            display: block;
-            font-size: 9px;
-            color: #94a3b8;
-            letter-spacing: 1px;
-            margin-top: -5px;
-        }
+.logo {
+    font-size: 30px;
+    font-weight: 800;
+    color: white;
+}
 
-        nav {
-            display: flex;
-            gap: 12px;
-        }
+.logo span {
+    color: #29b6f6;
+}
 
-        nav a {
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-        }
+.logo-subtitle {
+    display: none;
+}
 
-        .login-btn {
-            color: #2563eb;
-            padding: 8px 17px;
-            border: 1px solid #bfdbfe;
-            border-radius: 6px;
-        }
+/* Navigation */
 
-        .register-btn {
-            background: #2563eb;
-            color: white;
-            padding: 9px 18px;
-            border-radius: 6px;
-        }
+nav {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+}
 
-        .login-btn:hover {
-            background: #eff6ff;
-        }
+nav a {
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 600;
+    color: #cbd5e1;
+    transition: 0.3s;
+}
 
-        .register-btn:hover {
-            background: #1d4ed8;
-        }
+nav a:hover {
+    color: #29b6f6;
+}
 
+/* Login button */
+
+.login-btn {
+    color: #cbd5e1;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+/* Register button */
+
+.register-btn {
+    background: transparent;
+    color: #cbd5e1;
+    padding: 0;
+    border-radius: 0;
+}
+
+.login-btn:hover {
+    background: transparent;
+    color: #29b6f6;
+}
+
+.register-btn:hover {
+    background: transparent;
+    color: #29b6f6;
+}
         /* ================= HERO ================= */
 
         .hero {

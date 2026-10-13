@@ -176,3 +176,17 @@ class Income(models.Model):
 
     def __str__(self):
         return f"{self.source} - ₹{self.amount}"
+
+class PredictionHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    prediction_date = models.DateTimeField(auto_now_add=True)
+
+    predicted_status = models.CharField(max_length=20)
+
+    recommendation = models.TextField(blank=True)
+
+    risk_management = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.predicted_status}"
